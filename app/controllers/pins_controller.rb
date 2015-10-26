@@ -1,6 +1,6 @@
 class PinsController < ApplicationController
   before_action :set_pin, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user, only: [:edit, :update, :destroy]
+  before_action :correct_user, only: [:edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show ]
 
 
@@ -36,10 +36,12 @@ class PinsController < ApplicationController
     end
   end
 
-  def destroy
-    @pin.destroy
-    redirect_to pins_url
-  end
+   def destroy
+     if @pin.destroy
+     redirect_to pins_url , notice: 'Pin was successfully destroyed.' 
+    end
+ end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -55,5 +57,6 @@ class PinsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def pin_params
       params.require(:pin).permit(:description, :image)
+      
     end
 end
